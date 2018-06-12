@@ -1,0 +1,32 @@
+#title {
+	font-family: "Impact";
+	background-color: tomato;
+	color: orange;
+
+}
+
+#lyrics {
+	font-family: "Comic Sans MS";
+	background-color: tomato;
+	color: orange;
+	
+}
+
+body {
+	background-color: fuchsia;
+	color: chartreuse;
+	margin: auto;
+	width: 50%;
+	padding-top: 2%;
+}
+
+
+.dancing {
+	font-family: "Comic Sans MS";
+	
+}
+
+video {
+	border: 10px dashed tomato;
+	box-shadow: 0 0 0 2px yellow;
+}
