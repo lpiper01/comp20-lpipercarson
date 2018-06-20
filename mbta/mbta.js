@@ -9,6 +9,8 @@ var order = ["Alewife", "Davis", "Porter", "Harvard", "Central", "Kendall/MIT", 
 			 "Downtown Crossing", "South Station", "Broadway", "Andrew", "JFK/UMass", "Braintree"];
 var order_vals = {};
 
+var my_marker = undefined;
+
 redline_order();
 			 
 /* Loads all stations from data.csv and calls parseData
@@ -24,6 +26,63 @@ function loadAllStations()
 	
 	
 }
+
+function markMyPos()
+{
+	if (navigator.geolocation) {
+		navigator.geolocation.getCurrentPosition(markPos);
+	}
+
+}
+
+function markPos(position)
+{
+	var lat = position.coords.latitude;
+	var lng = position.coords.longitude;
+	my_marker = new google.maps.Marker({position: {lat, lng}, map: map, title: "My Location"});
+}
+
+function findClosestStop()
+{
+	if (navigator.geolocation) {
+		navigator.geolocation.getCurrentPosition(closestStop);
+	}
+
+}
+
+function closestStop(myPos)
+{
+	var myLat = myPos.coords.latitude;
+	var myLng = myPos.coords.longitude;
+	var myLatLng = new google.maps.LatLng(myLat, myLng);
+	
+	var closest_stop = {dist : Infinity, name : "", pos : new google.maps.LatLng(0,0)};
+	
+	for (var i = 0; i < red_line_stops.length; i++) {
+		var current_stop = red_line_stops[i];
+		var currentLatLng = new google.maps.LatLng(current_stop.pos.lat, current_stop.pos.lng);
+
+		var current_dist = google.maps.geometry.spherical.computeDistanceBetween(myLatLng, currentLatLng);
+
+		if (current_dist < closest_stop.dist) {
+			closest_stop.dist = current_dist;
+			closest_stop.name = current_stop.name;
+			closest_stop.pos = currentLatLng;
+			
+		}
+	}
+	
+	my_marker.setTitle("My position\nClosest stop is: " + closest_stop.name);
+	var line = new google.maps.Polyline({
+		path: [
+			myLatLng,
+			closest_stop.pos
+		],
+		geodesic: true
+	});
+	line.setMap(map);
+}
+
 
 
 // Turn plaintext CSVs into an array of station objects
@@ -64,7 +123,11 @@ function initMap()
 	map = new google.maps.Map(document.getElementById('map'), {zoom: 18, center: sstation});
 	
 	// Once map is available, we can populate it with markers and lines
-	loadAllStations();
+	google.maps.event.addListenerOnce(map, 'idle', function(){
+		loadAllStations();
+		markMyPos();
+				findClosestStop();
+	});
 
 }
 

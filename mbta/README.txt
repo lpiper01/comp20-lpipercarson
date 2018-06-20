@@ -1,9 +1,13 @@
 -- Correctly implemented
-   Red line is displayed and connected by a red line
-   All other train stops are marked, but not connected
-   
+	- Displays user's location
+	- Displays closest redline stop (hover over user position marker)
+	- Draws polyline between the positions
+
+	- have NOT implemented clicking subway markers
+	
+	
 -- Collaboration
    I worked alone
    
 -- Hours spent
-   I spent roughly 3 hours completing this assignment
+   I spent roughly
